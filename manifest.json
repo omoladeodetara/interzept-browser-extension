@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Interzept",
   "version": "1.0.0",
-  "description": "Quick access to Interzept - the ultimate tool for developers to mock, modify, and override API calls. Launch the app instantly to intercept requests, simulate APIs, and debug applications efficiently.",
+  "description": "Quick access to Interzept - mock, modify, and override API calls. Intercept requests and debug applications efficiently.",
   "permissions": ["tabs"],
   "action": {
     "default_popup": "popup.html",
