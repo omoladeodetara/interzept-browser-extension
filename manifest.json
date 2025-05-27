@@ -3,7 +3,7 @@
   "name": "Interzept",
   "version": "1.0.0",
   "description": "Quick access to Interzept - mock, modify, and override API calls. Intercept requests and debug applications efficiently.",
-  "permissions": ["tabs"],
+  "permissions": [],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
