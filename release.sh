@@ -14,6 +14,3 @@ git push origin "v$VERSION"
 
 # Create a new release on GitHub
 gh release create "v$VERSION" --title "Release v$VERSION" --notes "Automated release of version $VERSION"
-
-# Execute the release script
-./release.sh
