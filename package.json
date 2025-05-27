@@ -1,0 +1,11 @@
+{
+  "name": "interzept",
+  "version": "1.0.1",
+  "description": "Quick access to Interzept - mock, modify, and override API calls. Intercept requests and debug applications efficiently.",
+  "main": "popup.js",
+  "scripts": {
+    "release": "./release.sh"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

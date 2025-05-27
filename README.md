@@ -24,7 +24,7 @@ Click the Interzept extension icon in your Chrome toolbar to quickly access the 
 
 ## Version
 
-Current version: 1.0.0
+Current version: 1.0.1
 
 ## License
 
