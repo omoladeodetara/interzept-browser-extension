@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load saved state (default to enabled)
     extensionEnabled = true;
     updateUI();
+    updateVersion();
+    loadDynamicIcon();
     
     // Add event listeners
     const extensionToggle = document.getElementById('extensionToggle');
@@ -60,4 +62,32 @@ function openInterzept() {
     // Simple redirect to Interzept website
     chrome.tabs.create({ url: 'https://interzept.dev/' });
     window.close();
+}
+
+function updateVersion() {
+    // Get version from manifest and update display
+    const manifest = chrome.runtime.getManifest();
+    const versionElement = document.querySelector('.interzept-version');
+    if (versionElement && manifest.version) {
+        versionElement.textContent = `v${manifest.version}`;
+    }
+}
+
+function loadDynamicIcon() {
+    // Load icon dynamically from manifest
+    const manifest = chrome.runtime.getManifest();
+    const logoImage = document.getElementById('logoImage');
+    
+    if (logoImage && manifest.action && manifest.action.default_icon) {
+        // Use the largest available icon (128px) or fallback to 48px
+        const iconPath = manifest.action.default_icon['128'] || 
+                        manifest.action.default_icon['48'] || 
+                        manifest.action.default_icon['16'];
+        
+        if (iconPath) {
+            // Use chrome.runtime.getURL for proper extension resource URL
+            const iconUrl = chrome.runtime.getURL(iconPath);
+            logoImage.src = iconUrl;
+        }
+    }
 }
