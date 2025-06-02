@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interzept</title>    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }        /* Interzept Brand Colors */
+        :root {
+            --interzept-primary: #22d3ee;
+            --interzept-secondary: #3b82f6;
+            
+            --interzept-bg-primary: #0f172a;
+            --interzept-bg-secondary: #1e293b;
+            --interzept-bg-tertiary: #334155;
+            
+            --interzept-text-primary: #f1f5f9;
+            --interzept-text-secondary: #e2e8f0;
+            --interzept-text-muted: #94a3b8;
+            --interzept-text-disabled: #64748b;
+            
+            --interzept-border: #334155;
+            --interzept-border-hover: #475569;
+            
+            --interzept-success: #10b981;
+            --interzept-warning: #f59e0b;        --interzept-error: #ef4444;
+        }        /* Interzept Popup Styles */
+        .interzept-popup {
+            width: 600px;
+            height: 350px;
+            background: var(--interzept-bg-primary);
+            color: var(--interzept-text-secondary);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header Styling */
+        .interzept-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interzept-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }        .interzept-header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .interzept-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .interzept-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin: 0;
+        }
+
+        .interzept-header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }        /* Toggle Switch in Header */
+        .interzept-header-toggle {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .interzept-header-toggle.active {
+            background: rgba(34, 211, 238, 0.3);
+        }
+
+        .interzept-header-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: #64748b;
+            border-radius: 9px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .interzept-header-toggle.active::after {
+            left: 27px;
+            background: #22d3ee;
+        }        /* Status Badge */
+        .interzept-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+        }
+
+        .interzept-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: #22d3ee;
+        }
+
+        /* Content Area */
+        .interzept-content {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100% - 76px);
+        }
+
+        /* Rule Cards */
+        .interzept-rules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .interzept-rule {
+            background: var(--interzept-bg-secondary);
+            border: 1px solid var(--interzept-border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .interzept-rule:hover {
+            border-color: var(--interzept-border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .interzept-rule-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .interzept-rule-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--interzept-primary);
+        }
+
+        .interzept-rule-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--interzept-text-primary);
+        }
+
+        .interzept-rule-description {
+            font-size: 12px;
+            color: var(--interzept-text-muted);
+            margin-bottom: 12px;
+        }
+
+        .interzept-rule-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--interzept-secondary);
+        }
+
+        /* Action Area */
+        .interzept-actions {
+            background: var(--interzept-bg-secondary);
+            border: 1px solid var(--interzept-border);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .interzept-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .interzept-btn-primary {
+            background: var(--interzept-primary);
+            color: var(--interzept-bg-primary);
+        }
+
+        .interzept-btn-primary:hover {
+            background: color-mix(in srgb, var(--interzept-primary) 90%, white);
+        }
+
+        .interzept-version {
+            font-size: 12px;
+            color: var(--interzept-text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="interzept-popup">
+        <div class="interzept-header">
+            <div class="interzept-header-content">
+                <div class="interzept-logo">
+                    <img id="logoImage" src="/icons/icon48.png" width="24" height="24" alt="Interzept Logo">
+                </div>
+                <h1 class="interzept-title">Interzept</h1>
+                <div class="interzept-header-controls">
+                    <div class="interzept-status">
+                        <div class="interzept-status-dot"></div>
+                        <span>Ready</span>
+                    </div>
+                    <div id="extensionToggle" class="interzept-header-toggle active"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interzept-content">
+            <div class="interzept-rules-grid">
+                <div class="interzept-rule">
+                    <div class="interzept-rule-header">
+                        <div class="interzept-rule-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="interzept-rule-title">Rules Dashboard</div>
+                    </div>
+                    <div class="interzept-rule-description">
+                        Manage your interception rules and view analytics
+                    </div>
+                    <div class="interzept-rule-badge">Primary</div>
+                </div>
+                
+                <div class="interzept-rule">
+                    <div class="interzept-rule-header">
+                        <div class="interzept-rule-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 10C10.1046 10 11 9.10457 11 8C11 6.89543 10.1046 6 9 6C7.89543 6 7 6.89543 7 8C7 9.10457 7.89543 10 9 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M2.67 18.95L7.6 15.64C8.39 15.11 9.53 15.17 10.24 15.78L10.57 16.07C11.35 16.74 12.61 16.74 13.39 16.07L17.55 12.5C18.33 11.83 19.59 11.83 20.37 12.5L22 13.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="interzept-rule-title">API Interceptor</div>
+                    </div>
+                    <div class="interzept-rule-description">
+                        Monitor and modify API requests in real-time
+                    </div>
+                    <div class="interzept-rule-badge">Active</div>
+                </div>
+            </div>
+            
+            <div class="interzept-actions">
+                <button class="interzept-btn interzept-btn-primary">
+                    Open Dashboard
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.4301 5.92993L20.5001 11.9999L14.4301 18.0699" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3.5 12H20.33" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="interzept-version">v1.0.0</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
