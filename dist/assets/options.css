@@ -839,6 +839,9 @@ video {
 .block {
   display: block;
 }
+.inline {
+  display: inline;
+}
 .flex {
   display: flex;
 }
@@ -1794,6 +1797,10 @@ video {
 }
 .underline-offset-4 {
   text-underline-offset: 4px;
+}
+.placeholder-slate-400::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-placeholder-opacity, 1));
 }
 .accent-foreground {
   accent-color: hsl(var(--foreground));

@@ -140,3 +140,58 @@ export const appStorage = {
     return storage.clear();
   }
 };
+
+// Background script integration
+export const backgroundStorage = {
+  // Update rules in background script
+  async updateRules(rules: Rule[]): Promise<boolean> {
+    try {
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        const response = await chrome.runtime.sendMessage({
+          action: 'updateRules',
+          rules
+        });
+        return response && response.success;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to update rules in background:', error);
+      return false;
+    }
+  },
+
+  // Get current extension state
+  async getState(): Promise<{ enabled: boolean; rules: Rule[] }> {
+    try {
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        const response = await chrome.runtime.sendMessage({
+          action: 'getRules'
+        });
+        return {
+          enabled: response?.enabled || false,
+          rules: response?.rules || []
+        };
+      }
+      return { enabled: false, rules: [] };
+    } catch (error) {
+      console.error('Failed to get state from background:', error);
+      return { enabled: false, rules: [] };
+    }
+  },
+
+  // Toggle interception
+  async toggleInterception(): Promise<boolean> {
+    try {
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        const response = await chrome.runtime.sendMessage({
+          action: 'toggleInterception'
+        });
+        return response?.enabled || false;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to toggle interception:', error);
+      return false;
+    }
+  }
+};

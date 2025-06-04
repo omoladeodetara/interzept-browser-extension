@@ -2,8 +2,7 @@
   "manifest_version": 3,
   "name": "Interzept",
   "version": "25.6.4",
-  "description": "Quick access to Interzept - mock, modify, and override API calls. Intercept requests and debug applications efficiently.",
-  "permissions": ["storage", "activeTab"],
+  "description": "Quick access to Interzept - mock, modify, and override API calls. Intercept requests and debug applications efficiently.",  "permissions": ["storage", "activeTab", "declarativeNetRequest", "webRequest"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"

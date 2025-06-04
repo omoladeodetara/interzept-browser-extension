@@ -20675,11 +20675,11 @@ function ThemeProvider(_Q) {
   }, [defaultTheme]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children });
 }
+document.title = "Interzept Options - API Request Interceptor";
 const isMobile = () => {
   if (typeof window === "undefined") return false;
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 };
-document.title = "Interzept Options - API Request Interceptor";
 const isExtensionEnvironment = () => {
   return typeof window !== "undefined" && typeof window.chrome !== "undefined" && window.chrome.runtime && window.chrome.runtime.id;
 };
@@ -20934,27 +20934,25 @@ function App() {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(MobileNotSupported, {});
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeProvider, { attribute: "class", defaultTheme: "dark", enableSystem: false, disableTransitionOnChange: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-slate-900 text-slate-100 flex flex-col", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/icons/icon128.png", alt: "Interzept", className: "h-8 w-8" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl font-bold text-slate-100", children: "Interzept" })
-        ] }),
-        "                ",
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Input,
-            {
-              placeholder: "Search rules...",
-              value: searchQuery,
-              onChange: (e) => setSearchQuery(e.target.value),
-              className: "pl-10 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
-            }
-          )
-        ] })
-      ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/icons/icon128.png", alt: "Interzept", className: "h-8 w-8" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl font-bold text-slate-100", children: "Interzept" })
+      ] }),
+      "                ",
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            placeholder: "Search rules...",
+            value: searchQuery,
+            onChange: (e) => setSearchQuery(e.target.value),
+            className: "pl-10 bg-slate-700 border-slate-600 text-slate-100 placeholder-slate-400"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
@@ -20967,6 +20965,7 @@ function App() {
             ]
           }
         ),
+        "                  ",
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
@@ -20995,7 +20994,7 @@ function App() {
           }
         )
       ] })
-    ] }) }) }),
+    ] }) }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 pb-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto py-8 px-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-slate-800 border-slate-700", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { children: [
@@ -21362,7 +21361,8 @@ function App() {
               "Create Your First Rule"
             ]
           }
-        )
+        ),
+        "                "
       ] }) }) })
     ] }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "bg-slate-950 text-slate-300 py-8 px-6 border-t border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container mx-auto max-w-6xl", children: [

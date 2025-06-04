@@ -1,15 +1,45 @@
 // Extension state management
 let extensionEnabled = true;
+let activeRules = [];
+let extensionStats = { totalIntercepted: 0, rulesActive: 0 };
 
 // Initialize extension state on load
 document.addEventListener('DOMContentLoaded', function() {
-    // Load saved state (default to enabled)
-    extensionEnabled = true;
-    updateUI();
-    updateVersion();
-    loadDynamicIcon();
-    
-    // Add event listeners
+    initializePopup();
+});
+
+async function initializePopup() {
+    try {
+        // Load extension state from background
+        const response = await chrome.runtime.sendMessage({ action: 'getRules' });
+        if (response) {
+            extensionEnabled = response.enabled;
+            activeRules = response.rules || [];
+        }
+        
+        // Load stats
+        const stats = await chrome.runtime.sendMessage({ action: 'getStats' });
+        if (stats) {
+            extensionStats = stats;
+        }
+        
+        updateUI();
+        updateVersion();
+        loadDynamicIcon();
+        setupEventListeners();
+        
+    } catch (error) {
+        console.error('Failed to initialize popup:', error);
+        // Fallback to default state
+        updateUI();
+        updateVersion();
+        loadDynamicIcon();
+        setupEventListeners();
+    }
+}
+
+function setupEventListeners() {
+    // Toggle extension
     const extensionToggle = document.getElementById('extensionToggle');
     if (extensionToggle) {
         extensionToggle.addEventListener('click', toggleExtension);
@@ -28,11 +58,22 @@ document.addEventListener('DOMContentLoaded', function() {
     openButtons.forEach(button => {
         button.addEventListener('click', () => openInterzept());
     });
-});
+}
 
-function toggleExtension() {
-    extensionEnabled = !extensionEnabled;
-    updateUI();
+async function toggleExtension() {
+    try {
+        const response = await chrome.runtime.sendMessage({ action: 'toggleInterception' });
+        if (response && response.success) {
+            extensionEnabled = response.enabled;
+            updateUI();
+            
+            // Show feedback
+            showNotification(`Interception ${extensionEnabled ? 'enabled' : 'disabled'}`);
+        }
+    } catch (error) {
+        console.error('Failed to toggle extension:', error);
+        showNotification('Failed to toggle extension', 'error');
+    }
 }
 
 function updateUI() {
@@ -56,6 +97,9 @@ function updateUI() {
         statusDot.style.background = '#64748b';
         statusText.textContent = 'Disabled';
     }
+    
+    // Update stats display
+    updateStats();
 }
 
 function openInterzept() {
@@ -89,5 +133,59 @@ function loadDynamicIcon() {
             const iconUrl = chrome.runtime.getURL(iconPath);
             logoImage.src = iconUrl;
         }
+    }
+}
+
+// Show notification function
+function showNotification(message, type = 'success') {
+    // Create notification element if it doesn't exist
+    let notification = document.querySelector('.interzept-notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'interzept-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+    }
+    
+    // Set notification style based on type
+    if (type === 'error') {
+        notification.style.background = 'rgba(239, 68, 68, 0.9)';
+        notification.style.color = 'white';
+    } else {
+        notification.style.background = 'rgba(34, 211, 238, 0.9)';
+        notification.style.color = 'white';
+    }
+    
+    notification.textContent = message;
+    notification.style.display = 'block';
+    
+    // Auto hide after 2 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 2000);
+}
+
+// Update stats display
+function updateStats() {
+    // Update intercepted count if element exists
+    const interceptedElement = document.querySelector('.interzept-intercepted-count');
+    if (interceptedElement) {
+        interceptedElement.textContent = extensionStats.totalIntercepted || 0;
+    }
+    
+    // Update active rules count
+    const activeRulesElement = document.querySelector('.interzept-active-rules-count');
+    if (activeRulesElement) {
+        activeRulesElement.textContent = extensionStats.rulesActive || 0;
     }
 }
