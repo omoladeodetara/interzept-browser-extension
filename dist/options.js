@@ -20675,11 +20675,16 @@ function ThemeProvider(_Q) {
   }, [defaultTheme]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children });
 }
-document.title = "Interzept Options - API Request Interceptor";
 const isMobile = () => {
   if (typeof window === "undefined") return false;
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 };
+document.title = "Interzept Options - API Request Interceptor";
+const isExtensionEnvironment = () => {
+  return typeof window !== "undefined" && typeof window.chrome !== "undefined" && window.chrome.runtime && window.chrome.runtime.id;
+};
+const mockChrome = {};
+isExtensionEnvironment() ? window.chrome : mockChrome;
 const ruleTemplates = {
   "api-mock": {
     name: "API Mock Response",
@@ -20935,6 +20940,7 @@ function App() {
           /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/icons/icon128.png", alt: "Interzept", className: "h-8 w-8" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl font-bold text-slate-100", children: "Interzept" })
         ] }),
+        "                ",
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -20943,7 +20949,7 @@ function App() {
               placeholder: "Search rules...",
               value: searchQuery,
               onChange: (e) => setSearchQuery(e.target.value),
-              className: "w-80 bg-slate-700 border-slate-600 pl-10 text-slate-100 placeholder:text-slate-400 focus:border-cyan-400 focus:ring-cyan-400/20"
+              className: "pl-10 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
             }
           )
         ] })

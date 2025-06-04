@@ -8,12 +8,12 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./"),
     },
-  },
-  build: {
+  },  build: {
     outDir: 'dist',
     rollupOptions: {
       input: {
         options: path.resolve(__dirname, 'src/options/index.html'),
+        // popup: path.resolve(__dirname, 'src/popup/index.html'), // Using existing popup.html instead
       },
       output: {
         entryFileNames: '[name].js',

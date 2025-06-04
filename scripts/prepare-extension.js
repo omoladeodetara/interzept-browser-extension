@@ -59,15 +59,23 @@ iconFiles.forEach(({ src, dest }) => {
   }
 });
 
-// Move the options.html to the correct location
+// Move the HTML files to the correct locations
 if (fs.existsSync('dist/src/options/index.html')) {
   moveFile('dist/src/options/index.html', 'dist/options.html');
-  
-  // Clean up the entire src directory structure
-  if (fs.existsSync('dist/src')) {
-    fs.rmSync('dist/src', { recursive: true, force: true });
-    console.log('🧹 Cleaned up unnecessary src/ folder from extension');
-  }
+}
+
+// Don't overwrite the existing popup.html - it's already copied and working
+// The popup uses the root popup.html file, not the React-built version
+if (fs.existsSync('dist/src/popup/index.html')) {
+  // Just remove the built popup since we're using the existing one
+  fs.rmSync('dist/src/popup/index.html', { force: true });
+  console.log('🗑️  Removed built popup.html (using existing popup.html instead)');
+}
+
+// Clean up the entire src directory structure
+if (fs.existsSync('dist/src')) {
+  fs.rmSync('dist/src', { recursive: true, force: true });
+  console.log('🧹 Cleaned up unnecessary src/ folder from extension');
 }
 
 console.log('✅ Chrome Extension prepared in dist/ folder');
