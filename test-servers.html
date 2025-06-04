@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Test</title>
+</head>
+<body>
+    <h1>Server Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Test localStorage functionality
+        function testLocalStorage() {
+            const results = document.getElementById('results');
+            const port = window.location.port;
+            
+            try {
+                // Test writing to localStorage
+                const testData = [{ id: 'test', name: 'Test Rule', enabled: true }];
+                localStorage.setItem('interzept-rules', JSON.stringify(testData));
+                
+                // Test reading from localStorage
+                const saved = localStorage.getItem('interzept-rules');
+                const parsed = saved ? JSON.parse(saved) : [];
+                
+                results.innerHTML = `
+                    <h2>Server on Port ${port}</h2>
+                    <p><strong>localStorage Write:</strong> ${localStorage.setItem ? 'SUCCESS' : 'FAILED'}</p>
+                    <p><strong>localStorage Read:</strong> ${saved ? 'SUCCESS' : 'FAILED'}</p>
+                    <p><strong>Data Retrieved:</strong> ${JSON.stringify(parsed, null, 2)}</p>
+                    <p><strong>Rules Count:</strong> ${parsed.length}</p>
+                    <hr>
+                    <h3>All localStorage Keys:</h3>
+                    <ul>
+                        ${Object.keys(localStorage).map(key => `<li>${key}: ${localStorage.getItem(key)?.substring(0, 100)}...</li>`).join('')}
+                    </ul>
+                `;
+            } catch (error) {
+                results.innerHTML = `
+                    <h2>Server on Port ${port}</h2>
+                    <p style="color: red;"><strong>ERROR:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Run test when page loads
+        window.onload = testLocalStorage;
+    </script>
+</body>
+</html>
