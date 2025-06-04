@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import {
   PlusCircle,
   Trash2,
@@ -17,16 +17,37 @@ import {
   Upload,
   Zap,
 } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Rule } from "../shared/types/rules";
-import { useRules } from "../shared/hooks/useRules";
-import { isMobile, generateId } from "../shared/utils/helpers";
-import "@/styles/globals.css";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
+import { Textarea } from "../../components/ui/textarea";
+import { ThemeProvider } from "../../components/theme-provider";
+import "../../styles/globals.css";
 
 // Set page title
 document.title = "Interzept Options - API Request Interceptor";
+
+// Types
+interface Rule {
+  id: string;
+  name: string;
+  type: "overrides" | "redirect" | "headers";
+  enabled: boolean;
+  source: string;
+  destination?: string;
+  responseBody?: string;
+  responseCode?: number;
+  responseHeaders?: { name: string; value: string }[];
+  headers?: { name: string; value: string; operation: string }[];
+  description?: string;
+}
+
+// Utility functions
+const isMobile = () => {
+  if (typeof window === "undefined") return false;
+  return (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    window.innerWidth < 768
+  );
+};
 
 // Environment detection and Chrome API handling
 declare global {
@@ -380,39 +401,37 @@ export default function App() {
                     placeholder="Search rules..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
+                    className="pl-10 bg-slate-700 border-slate-600 text-slate-100 placeholder-slate-400"
                   />
                 </div>
-              </div>
 
-              {/* Import/Export */}
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  onClick={exportRules}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={exportRules}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Export
+                  </Button>                  <Button
+                    variant="outline"
+                    onClick={() => document.getElementById("import-file")?.click()}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Import
+                  </Button>
+                  <input id="import-file" type="file" accept=".json" onChange={importRules} className="hidden" aria-label="Import rules file" />
 
-                <Button
-                  variant="outline"
-                  onClick={() => document.getElementById("import-file")?.click()}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
-                >
-                  <Upload className="mr-2 h-4 w-4" />
-                  Import
-                </Button>
-                <input id="import-file" type="file" accept=".json" onChange={importRules} className="hidden" aria-label="Import rules file" />
-
-                <Button
-                  onClick={handleNewRule}
-                  className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-slate-900 font-semibold shadow-lg shadow-cyan-500/25"
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  New Rule
-                </Button>
+                  <Button
+                    onClick={handleNewRule}
+                    className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-slate-900 font-semibold shadow-lg shadow-cyan-500/25"
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    New Rule
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -864,6 +883,7 @@ export default function App() {
                 )}
               </div>
             </div>
+          </div>            </div>
           </div>
         </div>
 

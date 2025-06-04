@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interzept</title>    <style>
+    <title>Interzept</title><style>
         /* Reset & Base Styles */
         * {
             margin: 0;
@@ -440,13 +440,31 @@
             .interzept-content {
                 height: calc(100% - 120px);
             }
-        }
-
-        /* Focus States for Accessibility */
+        }        /* Focus States for Accessibility */
         .interzept-rule:focus,
         .interzept-btn:focus {
             outline: 2px solid rgba(34, 211, 238, 0.5);
             outline-offset: 2px;
+        }
+
+        /* Disabled Rule Styles */
+        .interzept-rule-disabled {
+            cursor: not-allowed !important;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .interzept-rule-disabled:hover {
+            transform: none !important;
+            border-color: rgba(148, 163, 184, 0.1) !important;
+            background: rgba(30, 41, 59, 0.8) !important;
+            box-shadow: none !important;
+        }
+
+        .interzept-rule-disabled .interzept-rule-type {
+            background: rgba(245, 158, 11, 0.1) !important;
+            color: #f59e0b !important;
+            border: 1px solid rgba(245, 158, 11, 0.2) !important;
         }
     </style>
 </head>
@@ -484,7 +502,7 @@
                         </div>
                     </div>
                 </div>                <!-- URL Redirects -->
-                <div class="interzept-rule" tabindex="0">
+                <div class="interzept-rule interzept-rule-disabled">
                     <div class="interzept-rule-header">                        <div class="interzept-rule-icon redirect">
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle>
@@ -494,12 +512,12 @@
                         </div><div class="interzept-rule-info">
                             <div class="interzept-rule-meta">
                                 <h3 class="interzept-rule-name">URL Redirects</h3>
-                                <span class="interzept-rule-type redirect">Redirect</span>
+                                <span class="interzept-rule-type redirect">Coming Soon</span>
                             </div>
                             <p class="interzept-rule-description">Redirect URLs with pattern matching</p>
                         </div>
                     </div>                </div>                <!-- Request Modification -->
-                <div class="interzept-rule" tabindex="0">
+                <div class="interzept-rule interzept-rule-disabled">
                     <div class="interzept-rule-header">                        <div class="interzept-rule-icon headers">
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h12"></path>
@@ -509,13 +527,13 @@
                         </div><div class="interzept-rule-info">
                             <div class="interzept-rule-meta">
                                 <h3 class="interzept-rule-name">Request Modification</h3>
-                                <span class="interzept-rule-type headers">Headers</span>
+                                <span class="interzept-rule-type headers">Coming Soon</span>
                             </div>
                             <p class="interzept-rule-description">Modify headers and parameters</p>
                         </div>
                     </div>
                 </div>                <!-- CORS Bypass -->
-                <div class="interzept-rule" tabindex="0">
+                <div class="interzept-rule interzept-rule-disabled">
                     <div class="interzept-rule-header">
                         <div class="interzept-rule-icon cors">
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -524,7 +542,7 @@
                         </div>                        <div class="interzept-rule-info">
                             <div class="interzept-rule-meta">
                                 <h3 class="interzept-rule-name">CORS Bypass</h3>
-                                <span class="interzept-rule-type cors">Security</span>
+                                <span class="interzept-rule-type cors">Coming Soon</span>
                             </div>
                             <p class="interzept-rule-description">Bypass CORS restrictions</p>
                         </div>
