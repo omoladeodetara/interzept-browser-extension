@@ -877,13 +877,11 @@ export default function App() {
                       >
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Create Your First Rule
-                      </Button>
-                    </CardContent>
+                      </Button>                </CardContent>
                   </Card>
                 )}
               </div>
             </div>
-          </div>            </div>
           </div>
         </div>
 
