@@ -1,6 +1,6 @@
 {
   "name": "interzept-extension",
-  "version": "25.6.4",
+  "version": "1.2506.6.14",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,9 @@
     "watch:extension": "nodemon --watch src --watch *.js --watch *.html --watch manifest.json -e tsx,ts,js,html,json --exec \"npm run build:fast\"",
     "dev:help": "node scripts/dev-helper.js",
     "preview": "vite preview",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "version": "node scripts/increment-version.js",
+    "version:force": "node scripts/increment-version.js --force"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

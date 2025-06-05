@@ -16,6 +16,7 @@ import {
   Download,
   Upload,
   Zap,
+  Github,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -814,16 +815,15 @@ export default function App() {
                                 API-focused interception currently supports JSON responses only
                               </p>
                             </div>
-                          </div>
-
-                          <div className="space-y-2">
+                          </div>                          <div className="space-y-2">
                             <Label htmlFor="response-body" className="text-slate-200">
                               Response Body
                             </Label>
                             <Textarea
                               id="response-body"
                               className="font-mono text-sm h-40 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
-                              value={activeRule.responseBody || '{\n  "success": true,\n  "data": {}\n}'}
+                              value={activeRule.responseBody ?? ''}
+                              placeholder='{\n  "success": true,\n  "data": {}\n}'
                               onChange={(e) => updateActiveRule("responseBody", e.target.value)}
                             />
                           </div>
@@ -878,9 +878,7 @@ export default function App() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Footer - Full Width & Snapped to Bottom */}
+        </div>        {/* Footer - Full Width & Snapped to Bottom */}
         <footer className="bg-slate-950 text-slate-300 py-8 px-6 border-t border-slate-800">
           <div className="container mx-auto max-w-6xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -893,52 +891,17 @@ export default function App() {
                   The ultimate tool for intercepting and modifying network requests. Built for developers who need to
                   test, debug, and develop web applications more efficiently.
                 </p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-4 text-white">Quick Links</h4>
-                <ul className="space-y-2 text-sm">
-                  <li>
-                    <a
-                      href="https://interzept.dev"
-                      className="hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://interzept.dev/#features"
-                      className="hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Features
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://interzept.dev/#download"
-                      className="hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://interzept.dev/privacy"
-                      className="hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Privacy Policy
-                    </a>
-                  </li>
-                </ul>
+              </div>              <div className="flex justify-center md:justify-end">
+                <a
+                  href="https://github.com/omoladeodetara/interzept-browser-extension"
+                  className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Contribute to this project"
+                >
+                  <Github className="h-4 w-4" />
+                  <span>Contribute to this project on Github</span>
+                </a>
               </div>
             </div>
 

@@ -15865,6 +15865,22 @@ const FileJson = createLucideIcon("FileJson", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Github = createLucideIcon("Github", [
+  [
+    "path",
+    {
+      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      key: "tonef"
+    }
+  ],
+  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
+]);
+/**
+ * @license lucide-react v0.454.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Globe = createLucideIcon("Globe", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
@@ -20856,6 +20872,7 @@ const MobileNotSupported = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { 
   ] })
 ] }) });
 function App() {
+  var _a;
   const [rules, setRules] = reactExports.useState([]);
   const [filteredRules, setFilteredRules] = reactExports.useState([]);
   const [searchQuery, setSearchQuery] = reactExports.useState("");
@@ -20866,8 +20883,8 @@ function App() {
     if (searchQuery) {
       const filtered = rules.filter(
         (rule) => {
-          var _a;
-          return rule.name.toLowerCase().includes(searchQuery.toLowerCase()) || ((_a = rule.description) == null ? void 0 : _a.toLowerCase().includes(searchQuery.toLowerCase())) || rule.source.toLowerCase().includes(searchQuery.toLowerCase());
+          var _a2;
+          return rule.name.toLowerCase().includes(searchQuery.toLowerCase()) || ((_a2 = rule.description) == null ? void 0 : _a2.toLowerCase().includes(searchQuery.toLowerCase())) || rule.source.toLowerCase().includes(searchQuery.toLowerCase());
         }
       );
       setFilteredRules(filtered);
@@ -21003,14 +21020,14 @@ function App() {
     URL.revokeObjectURL(url);
   };
   const importRules = (event) => {
-    var _a;
-    const file = (_a = event.target.files) == null ? void 0 : _a[0];
+    var _a2;
+    const file = (_a2 = event.target.files) == null ? void 0 : _a2[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      var _a2;
+      var _a3;
       try {
-        const importedRules = JSON.parse((_a2 = e.target) == null ? void 0 : _a2.result);
+        const importedRules = JSON.parse((_a3 = e.target) == null ? void 0 : _a3.result);
         if (Array.isArray(importedRules)) {
           const maxId = Math.max(0, ...rules.map((r2) => parseInt(r2.id)));
           const newRules = importedRules.map((rule, index2) => __spreadProps(__spreadValues({}, rule), {
@@ -21083,8 +21100,8 @@ function App() {
             {
               variant: "outline",
               onClick: () => {
-                var _a;
-                return (_a = document.getElementById("import-file")) == null ? void 0 : _a.click();
+                var _a2;
+                return (_a2 = document.getElementById("import-file")) == null ? void 0 : _a2.click();
               },
               className: "border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100",
               children: [
@@ -21426,6 +21443,7 @@ function App() {
                       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-400", children: "API-focused interception currently supports JSON responses only" })
                     ] })
                   ] }),
+                  "                          ",
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { htmlFor: "response-body", className: "text-slate-200", children: "Response Body" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -21433,7 +21451,8 @@ function App() {
                       {
                         id: "response-body",
                         className: "font-mono text-sm h-40 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20",
-                        value: activeRule.responseBody || '{\n  "success": true,\n  "data": {}\n}',
+                        value: (_a = activeRule.responseBody) != null ? _a : "",
+                        placeholder: '{\\n  "success": true,\\n  "data": {}\\n}',
                         onChange: (e) => updateActiveRule("responseBody", e.target.value)
                       }
                     )
@@ -21486,6 +21505,7 @@ function App() {
         )
       ] }) }) })
     ] }) }) }),
+    "        ",
     /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "bg-slate-950 text-slate-300 py-8 px-6 border-t border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container mx-auto max-w-6xl", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-8", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "md:col-span-2", children: [
@@ -21495,51 +21515,21 @@ function App() {
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-400 max-w-md", children: "The ultimate tool for intercepting and modifying network requests. Built for developers who need to test, debug, and develop web applications more efficiently." })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-semibold mb-4 text-white", children: "Quick Links" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "space-y-2 text-sm", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "a",
-              {
-                href: "https://interzept.dev",
-                className: "hover:text-white transition-colors",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                children: "Home"
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "a",
-              {
-                href: "https://interzept.dev/#features",
-                className: "hover:text-white transition-colors",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                children: "Features"
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "a",
-              {
-                href: "https://interzept.dev/#download",
-                className: "hover:text-white transition-colors",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                children: "Download"
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "a",
-              {
-                href: "https://interzept.dev/privacy",
-                className: "hover:text-white transition-colors",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                children: "Privacy Policy"
-              }
-            ) })
-          ] })
-        ] })
+        "              ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center md:justify-end", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "a",
+          {
+            href: "https://github.com/omoladeodetara/interzept-browser-extension",
+            className: "flex items-center gap-2 text-slate-400 hover:text-white transition-colors",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            title: "Contribute to this project",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Github, { className: "h-4 w-4" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Contribute to this project on Github" })
+            ]
+          }
+        ) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-slate-800 mt-8 pt-6 text-center text-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "© 2025 Interzept. All rights reserved." }) })
     ] }) })

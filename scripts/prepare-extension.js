@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
+// Auto-increment version before building
+console.log('🔢 Auto-incrementing version...');
+require('./increment-version.js');
+
 // Copy extension files to dist
 const copyFile = (src, dest) => {
   const destDir = path.dirname(dest);
@@ -26,8 +30,8 @@ const moveFile = (src, dest) => {
 // Files to copy to dist for the extension
 const filesToCopy = [
   { src: 'manifest.json', dest: 'dist/manifest.json' },
-  { src: 'popup.html', dest: 'dist/popup.html' },
-  { src: 'popup.js', dest: 'dist/popup.js' },
+  { src: 'src/popup/popup.html', dest: 'dist/popup.html' },
+  { src: 'src/popup/popup.js', dest: 'dist/popup.js' },
   { src: 'background.js', dest: 'dist/background.js' },
   { src: 'content.js', dest: 'dist/content.js' }
 ];
@@ -62,14 +66,6 @@ iconFiles.forEach(({ src, dest }) => {
 // Move the HTML files to the correct locations
 if (fs.existsSync('dist/src/options/index.html')) {
   moveFile('dist/src/options/index.html', 'dist/options.html');
-}
-
-// Don't overwrite the existing popup.html - it's already copied and working
-// The popup uses the root popup.html file, not the React-built version
-if (fs.existsSync('dist/src/popup/index.html')) {
-  // Just remove the built popup since we're using the existing one
-  fs.rmSync('dist/src/popup/index.html', { force: true });
-  console.log('🗑️  Removed built popup.html (using existing popup.html instead)');
 }
 
 // Clean up the entire src directory structure
