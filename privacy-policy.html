@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Interzept</title>
+    <meta name="description" content="Privacy Policy for Interzept Chrome Extension - Learn how we handle your data and protect your privacy.">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/interzept16.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="icons/interzept48.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="icons/interzept128.png">
+    <style>
+        :root {
+            --primary-color: #22d3ee;
+            --secondary-color: #3b82f6;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-gradient: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .content {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 1rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(34, 211, 238, 0.2);
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlight h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .permissions-list {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .permissions-list h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .contact-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .contact-info h3 {
+            color: var(--secondary-color);
+            margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="icons/interzept48.png" alt="Interzept Logo">
+                <span class="logo-text">Interzept</span>
+            </div>
+            <h1>Privacy Policy</h1>
+            <p class="last-updated">Last updated: December 28, 2024</p>
+        </header>
+
+        <main class="content">
+            <div class="highlight">
+                <h3>🔒 Privacy First</h3>
+                <p>Interzept is designed with privacy as a core principle. All data processing happens locally in your browser, and no information is transmitted to external servers.</p>
+            </div>
+
+            <h2>1. Overview</h2>
+            <p>Interzept is a Chrome browser extension designed for developers to intercept, mock, and override HTTP API requests for testing and debugging purposes. This privacy policy explains how the extension handles data and what information is collected, stored, and processed.</p>
+
+            <h2>2. Information We Collect and Store</h2>
+
+            <h3>User-Created Configuration Data</h3>
+            <p>The Interzept extension stores the following data locally and syncs it across your Chrome browsers:</p>
+            <ul>
+                <li><strong>Interception Rules:</strong> Custom rules you create for intercepting and modifying API requests</li>
+                <li><strong>API Response Overrides:</strong> Mock response data, status codes, and headers you configure</li>
+                <li><strong>URL Patterns:</strong> Website URL patterns where your rules should be applied</li>
+                <li><strong>Rule Settings:</strong> Enable/disable states, rule names, descriptions, and configurations</li>
+                <li><strong>Extension Preferences:</strong> Settings related to the extension's operation</li>
+            </ul>
+
+            <h3>Technical Data Processed</h3>
+            <ul>
+                <li><strong>HTTP Request URLs:</strong> The extension analyzes request URLs to apply your configured rules</li>
+                <li><strong>Request Headers:</strong> Processed to apply header modifications as configured in your rules</li>
+                <li><strong>Response Data:</strong> Generated mock responses based on your configured override rules</li>
+            </ul>
+
+            <h2>3. How We Use Information</h2>
+
+            <h3>Core Functionality</h3>
+            <ul>
+                <li><strong>Request Interception:</strong> Using Chrome's <code>declarativeNetRequest</code> API to intercept HTTP requests matching your configured patterns</li>
+                <li><strong>Response Override:</strong> Replacing API responses with your custom mock data for testing purposes</li>
+                <li><strong>Rule Management:</strong> Storing and syncing your configuration across Chrome browsers signed into the same Google account</li>
+                <li><strong>Local Processing:</strong> All rule processing happens locally in your browser</li>
+            </ul>
+
+            <div class="highlight">
+                <h3>🚫 No Remote Data Transmission</h3>
+                <ul>
+                    <li>The extension does not send your configuration data or intercepted requests to external servers</li>
+                    <li>All functionality operates locally within your browser environment</li>
+                    <li>No analytics or tracking of your browsing behavior</li>
+                </ul>
+            </div>
+
+            <h2>4. Data Storage and Synchronization</h2>
+
+            <h3>Chrome Sync Storage</h3>
+            <ul>
+                <li>Configuration data is stored using Chrome's built-in sync storage</li>
+                <li>Data automatically syncs across your Chrome browsers when signed into the same Google account</li>
+                <li>Storage is managed by Google's Chrome infrastructure, not our servers</li>
+            </ul>
+
+            <h3>Local Storage</h3>
+            <ul>
+                <li>Temporary data and session information may be stored locally</li>
+                <li>No sensitive information is permanently stored outside of Chrome's secure storage</li>
+            </ul>
+
+            <h2>5. Permissions and Access</h2>
+
+            <div class="permissions-list">
+                <h4>Required Permissions:</h4>
+                <ul>
+                    <li><code>storage</code> - To save your interception rules and settings</li>
+                    <li><code>declarativeNetRequest</code> - To intercept and modify HTTP requests</li>
+                </ul>
+            </div>
+
+            <div class="permissions-list">
+                <h4>Optional Host Permissions:</h4>
+                <ul>
+                    <li><code>http://*/*</code> and <code>https://*/*</code> - To intercept requests on websites</li>
+                    <li>These permissions are requested only when you choose to grant them</li>
+                    <li>The extension explains why these permissions are needed before requesting them</li>
+                </ul>
+            </div>
+
+            <h3>Permission Usage</h3>
+            <ul>
+                <li><strong>Website Access:</strong> Only used to intercept and modify HTTP requests as configured by you</li>
+                <li><strong>No Data Collection:</strong> We do not collect, analyze, or store information about your browsing habits</li>
+                <li><strong>No Background Activity:</strong> The extension only acts when you have active interception rules</li>
+            </ul>
+
+            <h2>6. Data Security</h2>
+            <ul>
+                <li><strong>Local Processing:</strong> All data processing occurs locally on your device</li>
+                <li><strong>Chrome Security:</strong> Data storage relies on Chrome's built-in security mechanisms</li>
+                <li><strong>No External Dependencies:</strong> The extension doesn't communicate with external servers</li>
+                <li><strong>User Control:</strong> You have complete control over what data is stored and can clear it at any time</li>
+            </ul>
+
+            <h2>7. Your Rights and Control</h2>
+            <ul>
+                <li><strong>Data Access:</strong> You can view all stored data through the extension's interface</li>
+                <li><strong>Data Deletion:</strong> You can delete individual rules or clear all data through the extension settings</li>
+                <li><strong>Permission Revocation:</strong> You can revoke permissions at any time through Chrome's extension settings</li>
+                <li><strong>Uninstallation:</strong> Uninstalling the extension removes all associated data</li>
+            </ul>
+
+            <h2>8. Third-Party Services</h2>
+            <p>Interzept does not integrate with or share data with any third-party services. The extension operates entirely within your browser environment.</p>
+
+            <h2>9. Children's Privacy</h2>
+            <p>Interzept is designed for developers and is not intended for use by children under 13. We do not knowingly collect any information from children.</p>
+
+            <h2>10. Changes to Privacy Policy</h2>
+            <p>We may update this privacy policy to reflect changes in our practices or for legal reasons. Any changes will be posted on this page with an updated "Last updated" date.</p>
+
+            <h2>11. Open Source</h2>
+            <p>Interzept's source code may be made available for review, allowing users to verify our privacy practices and data handling procedures.</p>            <h2>12. Contact Information</h2>
+            <div class="contact-info">
+                <p>If you have questions about this privacy policy or the extension's data handling:</p>
+                <ul>
+                    <li><strong>Email:</strong> omoladeodetara[at]gmail[dot]com</li>
+                    <li><strong>GitHub:</strong> Issues can be reported on the <a href="https://github.com/omoladeodetara/interzept-browser-extension" target="_blank" rel="noopener noreferrer">extension's GitHub repository</a></li>
+                </ul>
+            </div>
+
+            <h2>13. Legal Compliance</h2>
+            <p>This extension is designed to comply with:</p>
+            <ul>
+                <li>Chrome Web Store Developer Program Policies</li>
+                <li>General Data Protection Regulation (GDPR)</li>
+                <li>California Consumer Privacy Act (CCPA)</li>
+                <li>Other applicable data protection laws</li>
+            </ul>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Interzept. This privacy policy is designed to be transparent about our data practices.</p>
+        </footer>
+    </div>
+</body>
+</html>
