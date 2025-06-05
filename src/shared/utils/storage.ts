@@ -1,5 +1,8 @@
 import { Rule } from "../types/rules";
 
+// Chrome extension API declaration
+declare const chrome: any;
+
 // Storage keys
 const STORAGE_KEYS = {
   RULES: "interzept-rules",
@@ -17,7 +20,7 @@ interface StorageInterface {
 class ChromeStorage implements StorageInterface {
   async get(key: string): Promise<any> {
     if (typeof chrome !== "undefined" && chrome.storage) {
-      const result = await chrome.storage.local.get(key);
+      const result = await chrome.storage.sync.get(key);
       return result[key];
     }
     return null;
@@ -25,13 +28,13 @@ class ChromeStorage implements StorageInterface {
 
   async set(key: string, value: any): Promise<void> {
     if (typeof chrome !== "undefined" && chrome.storage) {
-      await chrome.storage.local.set({ [key]: value });
+      await chrome.storage.sync.set({ [key]: value });
     }
   }
 
   async clear(): Promise<void> {
     if (typeof chrome !== "undefined" && chrome.storage) {
-      await chrome.storage.local.clear();
+      await chrome.storage.sync.clear();
     }
   }
 }
@@ -89,6 +92,15 @@ export const rulesStorage = {
   async save(rules: Rule[]): Promise<void> {
     try {
       await storage.set(STORAGE_KEYS.RULES, rules);
+      
+      // Notify background script to update rules
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        try {
+          chrome.runtime.sendMessage({ action: 'UPDATE_RULES' });
+        } catch (error) {
+          console.log('Could not notify background script (extension context):', error);
+        }
+      }
     } catch (error) {
       console.error("Failed to save rules:", error);
     }

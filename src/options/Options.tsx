@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Rule } from "../shared/types/rules";
-import { useRules } from "../shared/hooks/useRules";
+import { rulesStorage } from "../shared/utils/storage";
 import { isMobile, generateId } from "../shared/utils/helpers";
 import "@/styles/globals.css";
 
@@ -157,37 +157,42 @@ export default function App() {
       setFilteredRules(filtered);
     } else {
       setFilteredRules(rules);
-    }
-  }, [rules, searchQuery]);
+    }  }, [rules, searchQuery]);
 
-  // Load rules from localStorage when component mounts
+  // Load rules from storage when component mounts
   useEffect(() => {
-    const savedRules = localStorage.getItem("interzept-rules");
-    if (savedRules) {
-      try {
-        const parsedRules = JSON.parse(savedRules);
-        setRules(parsedRules);
-      } catch (error) {
-        console.error("Error loading saved rules:", error);
-      }
-    }
+    loadRules();
   }, []);
 
-  // Save rules to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem("interzept-rules", JSON.stringify(rules));
-  }, [rules]);
+  const loadRules = async () => {
+    try {
+      const savedRules = await rulesStorage.load();
+      setRules(savedRules);
+    } catch (error) {
+      console.error("Error loading saved rules:", error);
+    }
+  };
 
-  const handleRuleToggle = (id: string) => {
+  const saveRules = async (newRules: Rule[]) => {
+    try {
+      await rulesStorage.save(newRules);
+      setRules(newRules);
+    } catch (error) {
+      console.error("Error saving rules:", error);
+    }
+  };
+  const handleRuleToggle = async (id: string) => {
     const rule = rules.find((r) => r.id === id);
     if (rule && rule.type !== "overrides") {
       return; // Don't allow toggling non-override rules
     }
-    setRules(rules.map((rule) => (rule.id === id ? { ...rule, enabled: !rule.enabled } : rule)));
+    const updatedRules = rules.map((rule) => (rule.id === id ? { ...rule, enabled: !rule.enabled } : rule));
+    await saveRules(updatedRules);
   };
 
-  const handleDeleteRule = (id: string) => {
-    setRules(rules.filter((rule) => rule.id !== id));
+  const handleDeleteRule = async (id: string) => {
+    const updatedRules = rules.filter((rule) => rule.id !== id);
+    await saveRules(updatedRules);
   };
 
   const handleEditRule = (rule: Rule) => {
@@ -234,8 +239,7 @@ export default function App() {
       }
     }, 0);
   };
-
-  const saveRule = () => {
+  const saveRule = async () => {
     if (!activeRule) return;
 
     // Prevent saving non-override rules
@@ -247,12 +251,14 @@ export default function App() {
     // Check if this is a new rule or an edit
     const isNewRule = !rules.some((rule) => rule.id === activeRule.id);
 
+    let updatedRules;
     if (isNewRule) {
-      setRules([...rules, activeRule]);
+      updatedRules = [...rules, activeRule];
     } else {
-      setRules(rules.map((rule) => (rule.id === activeRule.id ? activeRule : rule)));
+      updatedRules = rules.map((rule) => (rule.id === activeRule.id ? activeRule : rule));
     }
 
+    await saveRules(updatedRules);
     setEditMode(false);
     setActiveRule(null);
     setLockedTab(null);
@@ -415,8 +421,7 @@ export default function App() {
                 </Button>
               </div>
             </div>
-          </div>
-        </header>
+          </div>        </header>
 
         {/* Main Content */}
         <div className="flex-1 pb-8">
@@ -779,8 +784,7 @@ export default function App() {
                                 onChange={(e) => updateActiveRule("responseCode", Number.parseInt(e.target.value))}
                                 className="bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                            </div>
-                            <div className="space-y-2">
+                            </div>                            <div className="space-y-2">
                               <Label htmlFor="content-type" className="text-slate-200">
                                 Content Type
                               </Label>
@@ -792,14 +796,23 @@ export default function App() {
                                   <SelectItem value="application/json" className="text-slate-100">
                                     application/json
                                   </SelectItem>
-                                  <SelectItem value="text/html" className="text-slate-100">
-                                    text/html
+                                  <SelectItem value="text/html" className="text-slate-400 cursor-not-allowed" disabled>
+                                    <div className="flex justify-between items-center w-full">
+                                      <span>text/html</span>
+                                      <span className="text-xs text-slate-500">Coming Soon</span>
+                                    </div>
                                   </SelectItem>
-                                  <SelectItem value="text/plain" className="text-slate-100">
-                                    text/plain
+                                  <SelectItem value="text/plain" className="text-slate-400 cursor-not-allowed" disabled>
+                                    <div className="flex justify-between items-center w-full">
+                                      <span>text/plain</span>
+                                      <span className="text-xs text-slate-500">Coming Soon</span>
+                                    </div>
                                   </SelectItem>
                                 </SelectContent>
                               </Select>
+                              <p className="text-xs text-slate-400">
+                                API-focused interception currently supports JSON responses only
+                              </p>
                             </div>
                           </div>
 

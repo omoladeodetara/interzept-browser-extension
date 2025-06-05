@@ -20675,6 +20675,107 @@ function ThemeProvider(_Q) {
   }, [defaultTheme]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children });
 }
+const STORAGE_KEYS = {
+  RULES: "interzept-rules",
+  SETTINGS: "interzept-settings"
+};
+class ChromeStorage {
+  async get(key) {
+    if (typeof chrome !== "undefined" && chrome.storage) {
+      const result = await chrome.storage.sync.get(key);
+      return result[key];
+    }
+    return null;
+  }
+  async set(key, value) {
+    if (typeof chrome !== "undefined" && chrome.storage) {
+      await chrome.storage.sync.set({ [key]: value });
+    }
+  }
+  async clear() {
+    if (typeof chrome !== "undefined" && chrome.storage) {
+      await chrome.storage.sync.clear();
+    }
+  }
+}
+class LocalStorage {
+  async get(key) {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  async set(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error("Failed to save to localStorage:", error);
+    }
+  }
+  async clear() {
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error("Failed to clear localStorage:", error);
+    }
+  }
+}
+const createStorage = () => {
+  if (typeof chrome !== "undefined" && chrome.storage) {
+    return new ChromeStorage();
+  }
+  return new LocalStorage();
+};
+const storage = createStorage();
+const rulesStorage = {
+  async load() {
+    try {
+      const rules = await storage.get(STORAGE_KEYS.RULES);
+      return Array.isArray(rules) ? rules : [];
+    } catch (error) {
+      console.error("Failed to load rules:", error);
+      return [];
+    }
+  },
+  async save(rules) {
+    try {
+      await storage.set(STORAGE_KEYS.RULES, rules);
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        try {
+          chrome.runtime.sendMessage({ action: "UPDATE_RULES" });
+        } catch (error) {
+          console.log("Could not notify background script (extension context):", error);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save rules:", error);
+    }
+  },
+  async export() {
+    const rules = await this.load();
+    return JSON.stringify(rules, null, 2);
+  },
+  async import(jsonData) {
+    try {
+      const importedRules = JSON.parse(jsonData);
+      if (!Array.isArray(importedRules)) {
+        throw new Error("Invalid format: expected array of rules");
+      }
+      const validRules = importedRules.filter(
+        (rule) => rule && typeof rule.id === "string" && typeof rule.name === "string" && typeof rule.type === "string"
+      );
+      return validRules;
+    } catch (error) {
+      console.error("Failed to import rules:", error);
+      throw new Error("Invalid JSON format or corrupted data");
+    }
+  },
+  async clear() {
+    await storage.set(STORAGE_KEYS.RULES, []);
+  }
+};
 const isMobile = () => {
   if (typeof window === "undefined") return false;
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
@@ -20775,28 +20876,35 @@ function App() {
     }
   }, [rules, searchQuery]);
   reactExports.useEffect(() => {
-    const savedRules = localStorage.getItem("interzept-rules");
-    if (savedRules) {
-      try {
-        const parsedRules = JSON.parse(savedRules);
-        setRules(parsedRules);
-      } catch (error) {
-        console.error("Error loading saved rules:", error);
-      }
-    }
+    loadRules();
   }, []);
-  reactExports.useEffect(() => {
-    localStorage.setItem("interzept-rules", JSON.stringify(rules));
-  }, [rules]);
-  const handleRuleToggle = (id) => {
+  const loadRules = async () => {
+    try {
+      const savedRules = await rulesStorage.load();
+      setRules(savedRules);
+    } catch (error) {
+      console.error("Error loading saved rules:", error);
+    }
+  };
+  const saveRules = async (newRules) => {
+    try {
+      await rulesStorage.save(newRules);
+      setRules(newRules);
+    } catch (error) {
+      console.error("Error saving rules:", error);
+    }
+  };
+  const handleRuleToggle = async (id) => {
     const rule = rules.find((r2) => r2.id === id);
     if (rule && rule.type !== "overrides") {
       return;
     }
-    setRules(rules.map((rule2) => rule2.id === id ? __spreadProps(__spreadValues({}, rule2), { enabled: !rule2.enabled }) : rule2));
+    const updatedRules = rules.map((rule2) => rule2.id === id ? __spreadProps(__spreadValues({}, rule2), { enabled: !rule2.enabled }) : rule2);
+    await saveRules(updatedRules);
   };
-  const handleDeleteRule = (id) => {
-    setRules(rules.filter((rule) => rule.id !== id));
+  const handleDeleteRule = async (id) => {
+    const updatedRules = rules.filter((rule) => rule.id !== id);
+    await saveRules(updatedRules);
   };
   const handleEditRule = (rule) => {
     setActiveRule(rule);
@@ -20835,18 +20943,20 @@ function App() {
       }
     }, 0);
   };
-  const saveRule = () => {
+  const saveRule = async () => {
     if (!activeRule) return;
     if (activeRule.type !== "overrides") {
       alert("Only Override rules can be saved at this time. Redirect and Headers features are coming soon!");
       return;
     }
     const isNewRule = !rules.some((rule) => rule.id === activeRule.id);
+    let updatedRules;
     if (isNewRule) {
-      setRules([...rules, activeRule]);
+      updatedRules = [...rules, activeRule];
     } else {
-      setRules(rules.map((rule) => rule.id === activeRule.id ? activeRule : rule));
+      updatedRules = rules.map((rule) => rule.id === activeRule.id ? activeRule : rule);
     }
+    await saveRules(updatedRules);
     setEditMode(false);
     setActiveRule(null);
     setLockedTab(null);
@@ -20934,68 +21044,71 @@ function App() {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(MobileNotSupported, {});
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeProvider, { attribute: "class", defaultTheme: "dark", enableSystem: false, disableTransitionOnChange: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-slate-900 text-slate-100 flex flex-col", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/icons/icon128.png", alt: "Interzept", className: "h-8 w-8" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl font-bold text-slate-100", children: "Interzept" })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/icons/icon128.png", alt: "Interzept", className: "h-8 w-8" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl font-bold text-slate-100", children: "Interzept" })
+          ] }),
+          "                ",
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "Search rules...",
+                value: searchQuery,
+                onChange: (e) => setSearchQuery(e.target.value),
+                className: "pl-10 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
+              }
+            )
+          ] })
         ] }),
-        "                ",
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Input,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
             {
-              placeholder: "Search rules...",
-              value: searchQuery,
-              onChange: (e) => setSearchQuery(e.target.value),
-              className: "pl-10 bg-slate-700 border-slate-600 text-slate-100 focus:border-cyan-400 focus:ring-cyan-400/20"
+              variant: "outline",
+              onClick: exportRules,
+              className: "border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2 h-4 w-4" }),
+                "Export"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              onClick: () => {
+                var _a;
+                return (_a = document.getElementById("import-file")) == null ? void 0 : _a.click();
+              },
+              className: "border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, { className: "mr-2 h-4 w-4" }),
+                "Import"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("input", { id: "import-file", type: "file", accept: ".json", onChange: importRules, className: "hidden", "aria-label": "Import rules file" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              onClick: handleNewRule,
+              className: "bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-slate-900 font-semibold shadow-lg shadow-cyan-500/25",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CirclePlus, { className: "mr-2 h-4 w-4" }),
+                "New Rule"
+              ]
             }
           )
         ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button,
-          {
-            variant: "outline",
-            onClick: exportRules,
-            className: "border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2 h-4 w-4" }),
-              "Export"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button,
-          {
-            variant: "outline",
-            onClick: () => {
-              var _a;
-              return (_a = document.getElementById("import-file")) == null ? void 0 : _a.click();
-            },
-            className: "border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, { className: "mr-2 h-4 w-4" }),
-              "Import"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { id: "import-file", type: "file", accept: ".json", onChange: importRules, className: "hidden", "aria-label": "Import rules file" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button,
-          {
-            onClick: handleNewRule,
-            className: "bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-slate-900 font-semibold shadow-lg shadow-cyan-500/25",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CirclePlus, { className: "mr-2 h-4 w-4" }),
-              "New Rule"
-            ]
-          }
-        )
-      ] })
-    ] }) }) }),
+      ] }) }),
+      "        "
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 pb-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container mx-auto py-8 px-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-slate-800 border-slate-700", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { children: [
@@ -21293,16 +21406,24 @@ function App() {
                         }
                       )
                     ] }),
+                    "                            ",
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { htmlFor: "content-type", className: "text-slate-200", children: "Content Type" }),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { defaultValue: "application/json", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "bg-slate-700 border-slate-600 text-slate-100", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Content Type" }) }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { className: "bg-slate-800 border-slate-600", children: [
                           /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "application/json", className: "text-slate-100", children: "application/json" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "text/html", className: "text-slate-100", children: "text/html" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "text/plain", className: "text-slate-100", children: "text/plain" })
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "text/html", className: "text-slate-400 cursor-not-allowed", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center w-full", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "text/html" }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500", children: "Coming Soon" })
+                          ] }) }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "text/plain", className: "text-slate-400 cursor-not-allowed", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center w-full", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "text/plain" }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500", children: "Coming Soon" })
+                          ] }) })
                         ] })
-                      ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-400", children: "API-focused interception currently supports JSON responses only" })
                     ] })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
