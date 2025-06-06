@@ -41,13 +41,32 @@ This Chrome extension enables developers to intercept, mock, and override HTTP A
 ### Justification of Authorizations
 
 **Are you using remote code?**
-- [ ] No, I don't use "Remote Code"
+- [x] No, I don't use "Remote Code"
 - [ ] Yes, I use "Remote Code"
 
 **Justification:**
-*0/1000 characters entered*
+The extension operates entirely with code bundled within the extension package. No external JavaScript files, remote modules, or eval() statements are used.
 
 > **Note:** Remote code refers to any JS or Wasm code not included in the extension's package. This includes references to external files in `<script>` tags, modules pointing to external files, and strings evaluated via `eval()`.
+
+---
+
+### Permission Justifications
+
+**Justification for storage authorization:**
+The "storage" permission is essential for saving user-created interception rules, mock response configurations, and extension settings. This data is stored locally using Chrome's sync storage API, allowing users to maintain their configurations across devices signed into the same Google account. Without this permission, users would lose their configured rules every time they close the browser, making the extension unusable for its core purpose of persistent API request interception and mocking.
+
+*Character count: 498/1000*
+
+**Justification for declarativeNetRequest authorization:**
+The "declarativeNetRequest" permission is the core functionality of this extension. It enables the interception, modification, and overriding of HTTP API requests as they occur. This permission allows the extension to apply user-defined rules that mock API responses, modify request headers, and redirect requests for testing and debugging purposes. This is the primary and sole purpose of the extension - without this permission, the extension cannot perform its intended function of API request interception.
+
+*Character count: 522/1000*
+
+**Justification for Host access authorization (http://*/*, https://*/*):**
+Host permissions for all HTTP and HTTPS sites are necessary because developers need to test API calls across various domains and environments. The extension must be able to intercept requests on any website where the user is testing their applications - this includes localhost development servers, staging environments, production sites, and third-party APIs. Restricting to specific domains would severely limit the extension's utility for developers who work across multiple projects and environments.
+
+*Character count: 548/1000*
 
 ---
 
@@ -81,13 +100,23 @@ This Chrome extension enables developers to intercept, mock, and override HTTP A
 - [ ] **User activity**
   - *For example: network monitoring, clicks, mouse position, recording of scrolling movements or keyboard keys*
 
-- [ ] **Website Content**
+- [x] **Website Content**
   - *For example: text, images, sounds, videos or hyperlinks*
+  - **Justification:** The extension processes HTTP request URLs and response data to apply user-configured interception rules. This processing happens locally for the sole purpose of modifying API responses for testing and debugging.
+
+#### Additional Data Handling:
+**User Configuration Data:** The extension stores user-created interception rules, mock response configurations, and settings using Chrome's sync storage. This data includes:
+- Custom interception rules and patterns
+- Mock API response data and headers
+- Extension preferences and settings
+- Rule enable/disable states
+
+This data is stored locally and synced via Chrome's infrastructure - never transmitted to external servers.
 
 #### Required Certifications:
-- [ ] I do not sell or transfer user data to third parties outside of approved use cases.
-- [ ] I do not use or transfer user data for purposes unrelated to the core functionality of my article.
-- [ ] I do not use or transfer user data to determine creditworthiness or for lending purposes.
+- [x] I do not sell or transfer user data to third parties outside of approved use cases.
+- [x] I do not use or transfer user data for purposes unrelated to the core functionality of my article.
+- [x] I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
 > **Note:** You must check all three boxes to comply with our Developer Program Rules
 
