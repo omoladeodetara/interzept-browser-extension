@@ -151,7 +151,7 @@ Built with ❤️ for developers who need to test across multiple environments s
 
 Check out other Interzept projects:
 
-- **[interzept-environment-selector](https://github.com/omoladeodetara/interzept-environment-selector)** - Multi-environment data source selector with feature flags and production safety. Perfect for testing and debugging across multiple environments simultaneously.
+- **[interzept-environment-selector](https://github.com/interzept/interzept-environment-selector)** - Multi-environment data source selector with feature flags and production safety. Perfect for testing and debugging across multiple environments simultaneously.
 
 ## 🙏 Acknowledgments
 
